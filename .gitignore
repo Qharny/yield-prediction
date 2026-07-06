@@ -1,1 +1,9 @@
 /.claude
+.venv/
+yield_model*.pkl
+label_encoders.pkl
+feature_names.json
+regional_defaults.json
+.csv_datasets
+__pycache__
+.vscode
