@@ -1,0 +1,56 @@
+{
+  "Ashanti": {
+    "soil_ph": 6.0,
+    "soil_moisture_pct": 52,
+    "nitrogen_N_mg_kg": 95,
+    "phosphorus_P_mg_kg": 38,
+    "potassium_K_mg_kg": 130,
+    "rainfall_mm": 1400,
+    "temperature_c": 26.5
+  },
+  "Western": {
+    "soil_ph": 5.8,
+    "soil_moisture_pct": 55,
+    "nitrogen_N_mg_kg": 100,
+    "phosphorus_P_mg_kg": 40,
+    "potassium_K_mg_kg": 140,
+    "rainfall_mm": 1800,
+    "temperature_c": 25.8
+  },
+  "Brong-Ahafo": {
+    "soil_ph": 6.2,
+    "soil_moisture_pct": 50,
+    "nitrogen_N_mg_kg": 88,
+    "phosphorus_P_mg_kg": 34,
+    "potassium_K_mg_kg": 120,
+    "rainfall_mm": 1200,
+    "temperature_c": 27.2
+  },
+  "Northern": {
+    "soil_ph": 6.5,
+    "soil_moisture_pct": 42,
+    "nitrogen_N_mg_kg": 70,
+    "phosphorus_P_mg_kg": 28,
+    "potassium_K_mg_kg": 100,
+    "rainfall_mm": 900,
+    "temperature_c": 29.5
+  },
+  "Volta": {
+    "soil_ph": 6.1,
+    "soil_moisture_pct": 48,
+    "nitrogen_N_mg_kg": 82,
+    "phosphorus_P_mg_kg": 32,
+    "potassium_K_mg_kg": 115,
+    "rainfall_mm": 1100,
+    "temperature_c": 27.8
+  },
+  "Eastern": {
+    "soil_ph": 5.9,
+    "soil_moisture_pct": 51,
+    "nitrogen_N_mg_kg": 90,
+    "phosphorus_P_mg_kg": 36,
+    "potassium_K_mg_kg": 125,
+    "rainfall_mm": 1300,
+    "temperature_c": 26.9
+  }
+}

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AgriPredict Ghana — Crop Yield Prediction</title>
+  <meta name="description" content="AI-powered crop yield prediction for Ghanaian farmers. Enter your farm details and get instant yield forecasts for Maize and Tomato."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── Design Tokens ──────────────────────────────── */
+    :root {
+      --green-900: #0a2e1a;
+      --green-800: #0d3d22;
+      --green-700: #115c30;
+      --green-600: #1a7a3f;
+      --green-500: #22a050;
+      --green-400: #34c96a;
+      --green-300: #6adea0;
+      --gold-500:  #d4a017;
+      --gold-400:  #f0c040;
+      --gold-300:  #f7d97a;
+      --red-500:   #e53e3e;
+      --red-300:   #fc8181;
+      --amber-500: #d97706;
+      --amber-300: #fcd34d;
+      --surface:   #0f1c13;
+      --surface-2: #162318;
+      --surface-3: #1e3024;
+      --border:    rgba(52,201,106,0.15);
+      --text-1:    #f0faf4;
+      --text-2:    #a8d4b8;
+      --text-3:    #6aaa88;
+      --radius:    14px;
+      --radius-sm: 8px;
+      --shadow:    0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    /* ── Reset ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--surface);
+      color: var(--text-1);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Animated BG ─────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(26,122,63,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 90%, rgba(212,160,23,0.10) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* ── Layout ──────────────────────────────────────── */
+    .wrapper { position: relative; z-index: 1; }
+
+    /* ── Header ──────────────────────────────────────── */
+    header {
+      padding: 24px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      background: rgba(15,28,19,0.85);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-icon {
+      width: 42px; height: 42px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--green-500), var(--green-400));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 12px rgba(34,160,80,0.4);
+    }
+    .logo-text { font-size: 1.3rem; font-weight: 700; }
+    .logo-text span { color: var(--green-400); }
+    .badge {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
+      padding: 4px 10px; border-radius: 20px;
+      background: rgba(34,160,80,0.15);
+      border: 1px solid rgba(34,160,80,0.3);
+      color: var(--green-400);
+    }
+
+    /* ── Hero ────────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 60px 24px 40px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.1;
+      background: linear-gradient(135deg, var(--text-1) 40%, var(--green-400));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+    .hero p {
+      font-size: 1.05rem; color: var(--text-2);
+      max-width: 580px; margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+    .hero-stats {
+      display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-value { font-size: 1.6rem; font-weight: 700; color: var(--green-400); }
+    .stat-label { font-size: 0.78rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* ── Main Grid ───────────────────────────────────── */
+    .main {
+      max-width: 1100px; margin: 0 auto;
+      padding: 20px 20px 60px;
+      display: grid; grid-template-columns: 1fr 420px; gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .main { grid-template-columns: 1fr; }
+    }
+
+    /* ── Card ────────────────────────────────────────── */
+    .card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+    .card-title {
+      font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--green-400);
+      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title::before {
+      content: ''; display: block;
+      width: 3px; height: 16px; border-radius: 2px;
+      background: var(--green-500);
+    }
+
+    /* ── Form Sections ───────────────────────────────── */
+    .section-label {
+      font-size: 0.78rem; color: var(--text-3); font-weight: 500;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      margin: 20px 0 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: var(--border);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label {
+      font-size: 0.82rem; font-weight: 500; color: var(--text-2);
+    }
+    .form-group .hint {
+      font-size: 0.72rem; color: var(--text-3);
+    }
+    .form-group input, .form-group select {
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: var(--text-1);
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--green-500);
+      box-shadow: 0 0 0 3px rgba(34,160,80,0.15);
+    }
+    .form-group select option { background: var(--surface-2); }
+    .form-group input::placeholder { color: var(--text-3); }
+
+    /* Sensor toggle */
+    .sensor-toggle {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px; border-radius: var(--radius-sm);
+      background: rgba(34,160,80,0.06);
+      border: 1px dashed rgba(34,160,80,0.25);
+      cursor: pointer; user-select: none;
+      margin: 16px 0 4px;
+      transition: background 0.2s;
+    }
+    .sensor-toggle:hover { background: rgba(34,160,80,0.12); }
+    .sensor-toggle input[type=checkbox] { accent-color: var(--green-500); width: 16px; height: 16px; }
+    .sensor-toggle span { font-size: 0.85rem; color: var(--text-2); }
+    .sensor-toggle em { font-size: 0.75rem; color: var(--text-3); font-style: normal; }
+
+    #sensor-fields { display: none; }
+    #sensor-fields.visible { display: block; }
+
+    /* ── Submit Button ───────────────────────────────── */
+    .btn-predict {
+      width: 100%; margin-top: 24px;
+      padding: 15px 24px;
+      border: none; border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--green-600), var(--green-500));
+      color: white; font-size: 1rem; font-weight: 600;
+      cursor: pointer; letter-spacing: 0.02em;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+      box-shadow: 0 4px 16px rgba(34,160,80,0.35);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-predict:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(34,160,80,0.45);
+    }
+    .btn-predict:active { transform: translateY(0); }
+    .btn-predict:disabled { opacity: 0.6; cursor: not-allowed; }
+    .spinner {
+      width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white; border-radius: 50%;
+      animation: spin 0.7s linear infinite; display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Result Panel ────────────────────────────────── */
+    .result-panel { position: sticky; top: 90px; }
+
+    .result-placeholder {
+      padding: 48px 24px; text-align: center;
+      color: var(--text-3);
+    }
+    .result-placeholder .icon { font-size: 3rem; margin-bottom: 12px; }
+    .result-placeholder p { font-size: 0.9rem; line-height: 1.6; }
+
+    /* Result card when data arrives */
+    #result-content { display: none; }
+
+    .yield-display {
+      text-align: center; padding: 24px 0 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .yield-number {
+      font-size: 3rem; font-weight: 800; line-height: 1;
+      margin-bottom: 4px;
+    }
+    .yield-number.high  { color: var(--green-400); }
+    .yield-number.medium { color: var(--gold-400); }
+    .yield-number.low   { color: var(--red-300); }
+
+    .yield-unit { font-size: 0.85rem; color: var(--text-3); margin-bottom: 12px; }
+    .yield-ci {
+      font-size: 0.78rem; color: var(--text-3);
+      background: var(--surface-3); border-radius: 6px;
+      padding: 5px 12px; display: inline-block;
+    }
+
+    .category-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 18px; border-radius: 24px;
+      font-weight: 600; font-size: 0.9rem; margin: 12px 0;
+    }
+    .category-badge.high   { background: rgba(52,201,106,0.15); color: var(--green-400); border: 1px solid rgba(52,201,106,0.3); }
+    .category-badge.medium { background: rgba(240,192,64,0.12); color: var(--gold-400);  border: 1px solid rgba(240,192,64,0.3); }
+    .category-badge.low    { background: rgba(252,129,129,0.12); color: var(--red-300); border: 1px solid rgba(252,129,129,0.3); }
+
+    .result-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.85rem;
+    }
+    .result-row:last-child { border-bottom: none; }
+    .result-row .label { color: var(--text-3); }
+    .result-row .value { font-weight: 500; }
+
+    .advice-box {
+      margin-top: 16px; padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      background: rgba(34,160,80,0.07);
+      border-left: 3px solid var(--green-500);
+      font-size: 0.84rem; line-height: 1.6; color: var(--text-2);
+    }
+    .advice-box.medium {
+      background: rgba(240,192,64,0.07);
+      border-left-color: var(--gold-500);
+    }
+    .advice-box.low {
+      background: rgba(229,62,62,0.07);
+      border-left-color: var(--red-500);
+    }
+
+    .cold-start-note {
+      margin-top: 12px; padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(217,119,6,0.1);
+      border: 1px solid rgba(217,119,6,0.25);
+      font-size: 0.78rem; color: var(--amber-300);
+    }
+
+    .error-box {
+      padding: 16px; border-radius: var(--radius-sm);
+      background: rgba(229,62,62,0.1);
+      border: 1px solid rgba(229,62,62,0.3);
+      color: var(--red-300); font-size: 0.87rem; line-height: 1.5;
+    }
+
+    /* ── How It Works ────────────────────────────────── */
+    .how-section {
+      max-width: 1100px; margin: 0 auto 60px;
+      padding: 0 20px;
+    }
+    .how-section h2 {
+      font-size: 1.4rem; font-weight: 700; margin-bottom: 20px;
+      color: var(--text-1);
+    }
+    .steps {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .step {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 22px;
+    }
+    .step-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green-600), var(--green-500));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 12px;
+    }
+    .step h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 6px; }
+    .step p  { font-size: 0.82rem; color: var(--text-3); line-height: 1.6; }
+
+    /* ── Footer ──────────────────────────────────────── */
+    footer {
+      text-align: center; padding: 24px;
+      font-size: 0.8rem; color: var(--text-3);
+      border-top: 1px solid var(--border);
+    }
+    footer strong { color: var(--green-400); }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">🌾</div>
+      <div class="logo-text">Agri<span>Predict</span> Ghana</div>
+    </div>
+    <span class="badge">ML-POWERED</span>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Predict Your Crop Yield<br/>Before You Harvest</h1>
+    <p>AI-powered yield forecasting for Ghanaian maize and tomato farms — trained on regional agro-ecological data from all 6 farming regions.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-value">3,000+</div><div class="stat-label">Training Records</div></div>
+      <div class="stat"><div class="stat-value">R² ≥ 0.75</div><div class="stat-label">Model Accuracy</div></div>
+      <div class="stat"><div class="stat-value">6</div><div class="stat-label">Ghana Regions</div></div>
+      <div class="stat"><div class="stat-value">2</div><div class="stat-label">Crop Types</div></div>
+    </div>
+  </section>
+
+  <!-- Main Prediction Area -->
+  <main class="main">
+
+    <!-- Left: Form -->
+    <div class="card">
+      <div class="card-title">Farm Details</div>
+
+      <form id="predict-form">
+
+        <!-- Farm Basics -->
+        <div class="section-label">Farm Information</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="crop">Crop Type</label>
+            <select id="crop" name="crop" required>
+              <option value="">Select crop...</option>
+              <option value="Maize">Maize</option>
+              <option value="Tomato">Tomato</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="region">Region</label>
+            <select id="region" name="region" required>
+              <option value="">Select region...</option>
+              <option>Ashanti</option>
+              <option>Western</option>
+              <option>Brong-Ahafo</option>
+              <option>Northern</option>
+              <option>Volta</option>
+              <option>Eastern</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-top:14px">
+          <div class="form-group">
+            <label for="farm_size">Farm Size (acres)</label>
+            <input type="number" id="farm_size" name="farm_size_acres"
+                   min="0.1" max="100" step="0.1" placeholder="e.g. 2.5" required/>
+          </div>
+          <div class="form-group">
+            <label for="season">Season</label>
+            <select id="season" name="season">
+              <option value="Major">Major (Apr – Jul)</option>
+              <option value="Minor">Minor (Sep – Nov)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:14px">
+          <label for="variety">Crop Variety</label>
+          <select id="variety" name="crop_variety" required>
+            <option value="">Select crop first...</option>
+          </select>
+        </div>
+
+        <!-- Sensor Toggle -->
+        <label class="sensor-toggle">
+          <input type="checkbox" id="sensor-toggle"/>
+          <span>I have live sensor / soil test readings</span>
+          <em>(optional — regional defaults used otherwise)</em>
+        </label>
+
+        <!-- Sensor Fields -->
+        <div id="sensor-fields">
+          <div class="section-label">Soil &amp; ESP32 Sensor Readings</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="soil_ph">Soil pH</label>
+              <input type="number" id="soil_ph" name="soil_ph"
+                     min="2" max="10" step="0.1" placeholder="e.g. 6.2"/>
+              <span class="hint">Optimal: 5.8 – 7.0</span>
+            </div>
+            <div class="form-group">
+              <label for="soil_moisture">Soil Moisture (%)</label>
+              <input type="number" id="soil_moisture" name="soil_moisture_pct"
+                     min="0" max="100" step="1" placeholder="e.g. 55"/>
+              <span class="hint">Optimal: 40 – 70%</span>
+            </div>
+          </div>
+
+          <div class="section-label" style="margin-top:16px">NPK Levels (mg/kg)</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nitrogen">Nitrogen (N)</label>
+              <input type="number" id="nitrogen" name="nitrogen_N_mg_kg"
+                     min="0" max="400" step="1" placeholder="e.g. 110"/>
+            </div>
+            <div class="form-group">
+              <label for="phosphorus">Phosphorus (P)</label>
+              <input type="number" id="phosphorus" name="phosphorus_P_mg_kg"
+                     min="0" max="200" step="1" placeholder="e.g. 42"/>
+            </div>
+          </div>
+          <div class="form-row" style="margin-top:14px">
+            <div class="form-group">
+              <label for="potassium">Potassium (K)</label>
+              <input type="number" id="potassium" name="potassium_K_mg_kg"
+                     min="0" max="500" step="1" placeholder="e.g. 155"/>
+            </div>
+            <div class="form-group">
+              <label for="rainfall">Annual Rainfall (mm)</label>
+              <input type="number" id="rainfall" name="rainfall_mm"
+                     min="200" max="3000" step="10" placeholder="e.g. 1380"/>
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:14px">
+            <label for="temperature">Temperature (°C)</label>
+            <input type="number" id="temperature" name="temperature_c"
+                   min="15" max="45" step="0.1" placeholder="e.g. 26.3"/>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-predict" id="submit-btn">
+          <div class="spinner" id="spinner"></div>
+          <span id="btn-text">Predict Yield</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Right: Result -->
+    <div class="result-panel">
+      <div class="card">
+        <div class="card-title">Prediction Result</div>
+
+        <div id="result-placeholder" class="result-placeholder">
+          <div class="icon">🌱</div>
+          <p>Fill in your farm details on the left and click <strong>Predict Yield</strong> to get your forecast.</p>
+        </div>
+
+        <div id="result-error" style="display:none">
+          <div class="error-box" id="error-msg"></div>
+        </div>
+
+        <div id="result-content">
+          <div class="yield-display">
+            <div class="yield-number" id="yield-number">—</div>
+            <div class="yield-unit" id="yield-unit"></div>
+            <div class="yield-ci" id="yield-ci"></div>
+            <br/>
+            <span class="category-badge" id="category-badge"></span>
+          </div>
+
+          <div class="result-row">
+            <span class="label">Total Yield</span>
+            <span class="value" id="total-yield">—</span>
+          </div>
+          <div class="result-row">
+            <span class="label">Crop</span>
+            <span class="value" id="res-crop">—</span>
+          </div>
+          <div class="result-row">
+            <span class="label">Region</span>
+            <span class="value" id="res-region">—</span>
+          </div>
+          <div class="result-row">
+            <span class="label">Farm Size</span>
+            <span class="value" id="res-size">—</span>
+          </div>
+
+          <div class="advice-box" id="advice-box"></div>
+          <div class="cold-start-note" id="cold-start-note" style="display:none">
+            ⚠ Regional defaults used for: <span id="cold-start-fields"></span>.<br/>
+            As your ESP32 logs data, these will be replaced with real readings.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- How It Works -->
+  <section class="how-section">
+    <h2>How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Train on Regional Data</h3>
+        <p>ML model trains offline on 3,000+ synthetic records calibrated to Ghanaian agro-ecological baselines (Asamoah et al.).</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Profile Your Farm</h3>
+        <p>ESP32 sensors capture real-time soil pH, NPK, and moisture — or use regional defaults for first-time farmers.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Run Prediction</h3>
+        <p>Random Forest + XGBoost ensemble maps your soil profile to historical yield outcomes and forecasts your harvest.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Get Actionable Advice</h3>
+        <p>Receive a yield estimate, confidence band, and targeted agronomic recommendations to maximise your output.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Built for <strong>Smart Agriculture IoT Research</strong> &mdash; Ghana &bull; Powered by Random Forest &amp; XGBoost
+  </footer>
+
+</div>
+
+<script>
+  // ── Varieties per crop ────────────────────────────────────────────────────
+  const varieties = {
+    Maize:  ["Local", "Hybrid OPV", "Pioneer 30G19"],
+    Tomato: ["Local", "Pectomech", "F1 Hybrid"],
+  };
+
+  document.getElementById("crop").addEventListener("change", function () {
+    const sel = document.getElementById("variety");
+    sel.innerHTML = '<option value="">Select variety...</option>';
+    (varieties[this.value] || []).forEach(v => {
+      const opt = document.createElement("option");
+      opt.value = opt.textContent = v;
+      sel.appendChild(opt);
+    });
+  });
+
+  // ── Sensor toggle ─────────────────────────────────────────────────────────
+  document.getElementById("sensor-toggle").addEventListener("change", function () {
+    document.getElementById("sensor-fields").classList.toggle("visible", this.checked);
+  });
+
+  // ── Form submit ───────────────────────────────────────────────────────────
+  document.getElementById("predict-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const btn     = document.getElementById("submit-btn");
+    const spinner = document.getElementById("spinner");
+    const btnText = document.getElementById("btn-text");
+    const sensorOn = document.getElementById("sensor-toggle").checked;
+
+    btn.disabled = true;
+    spinner.style.display = "block";
+    btnText.textContent = "Predicting...";
+
+    // Build payload
+    const payload = {
+      crop:           document.getElementById("crop").value,
+      region:         document.getElementById("region").value,
+      farm_size_acres: parseFloat(document.getElementById("farm_size").value),
+      crop_variety:   document.getElementById("variety").value,
+      season:         document.getElementById("season").value,
+    };
+
+    if (sensorOn) {
+      const get = id => {
+        const v = document.getElementById(id).value.trim();
+        return v !== "" ? parseFloat(v) : null;
+      };
+      payload.soil_ph             = get("soil_ph");
+      payload.soil_moisture_pct   = get("soil_moisture");
+      payload.nitrogen_N_mg_kg    = get("nitrogen");
+      payload.phosphorus_P_mg_kg  = get("phosphorus");
+      payload.potassium_K_mg_kg   = get("potassium");
+      payload.rainfall_mm         = get("rainfall");
+      payload.temperature_c       = get("temperature");
+    }
+
+    try {
+      const resp = await fetch("/api/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = await resp.json();
+
+      if (json.success) {
+        showResult(json.data);
+      } else {
+        showError(json.error);
+      }
+    } catch (err) {
+      showError("Could not reach the server. Make sure the Flask app is running.");
+    } finally {
+      btn.disabled = false;
+      spinner.style.display = "none";
+      btnText.textContent = "Predict Yield";
+    }
+  });
+
+  // ── Display Result ────────────────────────────────────────────────────────
+  function showResult(d) {
+    document.getElementById("result-placeholder").style.display = "none";
+    document.getElementById("result-error").style.display = "none";
+    document.getElementById("result-content").style.display = "block";
+
+    const cat = d.yield_category.toLowerCase();
+
+    const numEl = document.getElementById("yield-number");
+    numEl.textContent = d.predicted_yield_per_acre;
+    numEl.className = "yield-number " + cat;
+
+    document.getElementById("yield-unit").textContent = d.yield_unit;
+    const ci = d.confidence_interval;
+    document.getElementById("yield-ci").textContent =
+      `95% CI: ${ci.low} – ${ci.high} ${d.yield_unit}`;
+
+    const badge = document.getElementById("category-badge");
+    const emojis = { high: "🟢", medium: "🟡", low: "🔴" };
+    badge.textContent = `${emojis[cat]} ${d.yield_category} Yield`;
+    badge.className = "category-badge " + cat;
+
+    document.getElementById("total-yield").textContent =
+      `${d.predicted_total_yield} ${d.yield_unit.replace("/acre", "")}`;
+    document.getElementById("res-crop").textContent = d.crop;
+    document.getElementById("res-region").textContent = d.region;
+    document.getElementById("res-size").textContent =
+      `${d.inputs_used.farm_size_acres} acres`;
+
+    const adviceEl = document.getElementById("advice-box");
+    adviceEl.textContent = d.advice;
+    adviceEl.className = "advice-box " + cat;
+
+    const coldNote = document.getElementById("cold-start-note");
+    if (d.cold_start_applied) {
+      document.getElementById("cold-start-fields").textContent =
+        d.cold_start_fields.join(", ");
+      coldNote.style.display = "block";
+    } else {
+      coldNote.style.display = "none";
+    }
+  }
+
+  function showError(msg) {
+    document.getElementById("result-placeholder").style.display = "none";
+    document.getElementById("result-content").style.display = "none";
+    document.getElementById("result-error").style.display = "block";
+    document.getElementById("error-msg").innerHTML =
+      "<strong>Error:</strong> " + msg;
+  }
+</script>
+</body>
+</html>

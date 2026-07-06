@@ -1,0 +1,28 @@
+{
+  "Maize": [
+    "soil_ph",
+    "soil_moisture_pct",
+    "nitrogen_N_mg_kg",
+    "phosphorus_P_mg_kg",
+    "potassium_K_mg_kg",
+    "rainfall_mm",
+    "temperature_c",
+    "farm_size_acres",
+    "region",
+    "crop_variety",
+    "season"
+  ],
+  "Tomato": [
+    "soil_ph",
+    "soil_moisture_pct",
+    "nitrogen_N_mg_kg",
+    "phosphorus_P_mg_kg",
+    "potassium_K_mg_kg",
+    "rainfall_mm",
+    "temperature_c",
+    "farm_size_acres",
+    "region",
+    "crop_variety",
+    "season"
+  ]
+}
