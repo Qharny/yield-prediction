@@ -1,0 +1,45 @@
+# Python
+
+**pycache**/
+*.pyc
+*.pyo
+
+# Virtual Environment
+
+.venv/
+venv/
+
+# TensorFlow Models
+
+model/
+*.keras
+*.h5
+
+# VS Code
+
+.vscode/
+
+# Streamlit
+
+.streamlit/
+
+# OS
+
+.DS_Store
+Thumbs.db
+
+# Datasets and local training directories
+training/data/
+training/pv-dataset/
+training/test_data/
+training/data_capped/
+
+
+# Training Logs & Outputs
+training/*.log
+training/temp_weights*
+training/training_history.png
+training/evaluation_report.txt
+training/confusion_matrix.png
+pip_install*.log
+

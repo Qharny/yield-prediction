@@ -1,0 +1,68 @@
+import numpy as np
+import tensorflow as tf
+
+from tensorflow.keras.applications.vgg19 import preprocess_input
+
+from ml_model import model
+from class_names import class_names
+
+
+def predict_image(image):
+
+    image = tf.image.resize(image, (224, 224))
+
+    image = np.array(image, dtype=np.float32).copy()
+
+    image = np.expand_dims(image, axis=0)
+
+    image = preprocess_input(image)
+
+    preds = model.predict(image, verbose=0)[0]
+
+    top1 = float(np.max(preds))
+
+    top2 = float(np.partition(preds, -2)[-2])
+
+    confidence_gap = top1 - top2
+
+    class_id = int(np.argmax(preds))
+
+    predicted_label = class_names[class_id]
+
+    # Top 3 predictions (useful for debugging)
+    top3_idx = np.argsort(preds)[-3:][::-1]
+
+    top3_predictions = [
+        {
+            "class": class_names[i],
+            "confidence": float(preds[i])
+        }
+        for i in top3_idx
+    ]
+
+    # Rejection rule
+    if top1 < 0.50:
+        return {
+            "prediction": "UNKNOWN",
+            "status": "rejected",
+            "confidence": top1,
+            "message": "Low confidence prediction.",
+            "top_predictions": top3_predictions
+        }
+
+    if top1 < 0.55 and confidence_gap < 0.10:
+        return {
+            "prediction": "UNKNOWN",
+            "status": "uncertain",
+            "confidence": top1,
+            "message": "Model is uncertain between classes.",
+            "top_predictions": top3_predictions
+        }
+
+    return {
+        "prediction": predicted_label,
+        "status": "accepted",
+        "confidence": top1,
+        "confidence_gap": confidence_gap,
+        "top_predictions": top3_predictions
+    }

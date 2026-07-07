@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="copy_button.css">
+  <title>Copy Button Demo</title>
+</head>
+<body>
+
+<div class="copy-to-clipboard" aria-hidden="false">
+  <button type="button" aria-label="Copy to clipboard" title="Copy to clipboard" id="copyBtn">
+    <span class="sr-only">Copy to clipboard</span>
+    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" focusable="false">
+      <path d="M16 1H4a2 2 0 0 0-2 2v12h2V3h12V1zM20 5H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h12v14z"/>
+    </svg>
+  </button>
+</div>
+
+<script>
+document.getElementById('copyBtn').addEventListener('click', async function(){
+  try{
+    await navigator.clipboard.writeText('Example text to copy');
+    this.setAttribute('aria-label','Copied');
+    this.title = 'Copied';
+  }catch(e){
+    console.error('copy failed', e);
+    alert('Copy failed');
+  }
+});
+</script>
+
+</body>
+</html>
