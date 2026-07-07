@@ -14,9 +14,16 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 from model.predict import predict_yield
 
 app = Flask(__name__)
+CORS(app)
+
+# Optional shared-secret so the public deployment can't be spammed by anyone
+# who finds the URL. Set YIELD_API_KEY in the host's env to enable; leave
+# unset for local development.
+API_KEY = os.environ.get("YIELD_API_KEY")
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 
@@ -48,6 +55,9 @@ def api_predict():
 
     Returns JSON prediction result.
     """
+    if API_KEY and request.headers.get("X-API-Key") != API_KEY:
+        return jsonify({"success": False, "error": "Unauthorized"}), 401
+
     try:
         data = request.get_json(force=True)
 

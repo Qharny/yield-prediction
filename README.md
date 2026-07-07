@@ -117,6 +117,38 @@ yield prediction/
 
 ---
 
+## Deploying for AgriVault Integration
+
+The AgriVault Ghana web app (React + Supabase) calls this API through a
+`predict-yield` Supabase Edge Function, which runs in Supabase's cloud —
+so `localhost:5000` is **not** reachable from it. This API needs a public
+URL before that integration works end-to-end.
+
+**Recommended: Render (free tier)**
+1. Push this repo to GitHub (already done: `Qharny/yield-prediction`).
+2. On [render.com](https://render.com), create a **Web Service** from the repo.
+3. Build command: `pip install -r requirements.txt`
+4. Start command: `gunicorn app:app` (a `Procfile` with this is already included).
+5. Optionally set an env var `YIELD_API_KEY` to a random secret string — this
+   locks down `/api/predict` so only requests with a matching `X-API-Key`
+   header succeed.
+6. Once deployed, copy the public URL (e.g. `https://yield-prediction.onrender.com`).
+
+Any other Python host (Railway, Fly.io, PythonAnywhere) works the same way —
+they just need `gunicorn app:app` as the start command.
+
+**Wire it into AgriVault:**
+In the Supabase project's Edge Function secrets, set:
+- `YIELD_API_URL` = the public URL from above (no trailing slash)
+- `YIELD_API_KEY` = the same value used above, if you set one
+
+The `predict-yield` edge function forwards requests to `${YIELD_API_URL}/api/predict`.
+
+> Free tiers on Render/Railway sleep after inactivity — the first prediction
+> after idle time may take 20-30s while the instance wakes up.
+
+---
+
 ## Methodology
 
 Based on system design from `system.txt`:
