@@ -1,0 +1,369 @@
+\documentclass[letterpaper,11pt]{article}
+
+% ---------- Layout ----------
+\usepackage[top=0.75in, bottom=0.75in, left=0.5in, right=0.5in]{geometry}
+
+% ---------- Core Packages ----------
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{refcount}
+\usepackage{xcolor}
+\usepackage{datetime}
+\usepackage{fontawesome5}
+
+% ---------- Section Formatting ----------
+\titleformat{\section}{\scshape\raggedright\large}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{10pt}{6pt}
+
+% ---------- Global List Control ----------
+\setlist{
+    topsep=2pt,
+    itemsep=2pt,
+    parsep=0pt,
+    partopsep=0pt
+}
+
+% ---------- Header / Footer ----------
+\newdateformat{monthyeardate}{\shortmonthname[\THEMONTH] \THEYEAR}
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[C]{%
+    \ifnum\value{page}>1
+    \scshape\small\color[gray]{0.25} Araba Fenyiwah Turkson
+    \fi
+}
+
+\fancyfoot[L]{%
+    \footnotesize\color[gray]{0.25}
+    \textit{Updated \monthyeardate\today}
+}
+
+\fancyfoot[R]{%
+    \ifnum\getpagerefnumber{LastPage}>1
+    \footnotesize\color[gray]{0.25}
+    Page \thepage\ of \getpagerefnumber{LastPage}
+    \fi
+}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% ---------- General Formatting ----------
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0pt}
+\pdfgentounicode=1
+
+% ---------- Smart Spacing Flag ----------
+\newif\ifnotfirstsubheading
+
+% ---------- Custom Commands ----------
+
+\newcommand{\resumeItem}[2]{%
+    \item \small
+    \if\relax\detokenize{#1}\relax
+    #2
+    \else
+    \textbf{#1:} #2
+    \fi
+}
+
+\newcommand{\resumeSubItem}[2]{\resumeItem{#1}{#2}}
+
+\newcommand{\resumeSubHeadingListStart}{%
+    \begin{itemize}[leftmargin=0.15in, label={}]
+        \notfirstsubheadingfalse
+    }
+
+    \newcommand{\resumeSubHeadingListEnd}{%
+    \end{itemize}
+}
+
+\newcommand{\resumeSubheading}[4]{%
+    \ifnotfirstsubheading
+    \vspace{2pt}
+    \fi
+    \notfirstsubheadingtrue
+
+    \item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+        \textbf{#1} & \small #2 \\
+        \textit{\small #3} & \textit{\small #4} \\
+    \end{tabular*}
+}
+
+\newcommand{\resumeSubSubheading}[2]{%
+    \item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+        \textit{\small #1} & \textit{\small #2} \\
+    \end{tabular*}
+}
+
+\newcommand{\resumeProjectHeading}[3]{%
+    \ifnotfirstsubheading
+    \vspace{2pt}
+    \fi
+    \notfirstsubheadingtrue
+
+    \item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+        \if\relax\detokenize{#2}\relax
+        \textbf{#1}  & \small #3 \\
+        \else
+        \textbf{#1} $|$ \textit{#2} & \small #3 \\
+        \fi
+    \end{tabular*}
+    \vspace{1pt}
+}
+
+
+\newcommand{\resumeAward}[3]{%
+    \item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+        \small\textbf{#1} & \small #2 \\
+        \multicolumn{2}{l}{\textit{\small #3}} \\
+    \end{tabular*}
+}
+
+\newcommand{\resumeItemListStart}{%
+    \begin{itemize}[leftmargin=0.25in, label=\footnotesize\textbullet]
+    }
+
+    \newcommand{\resumeItemListEnd}{%
+    \end{itemize}
+}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+    % ---------- Header ----------
+    \begin{center}
+        {\scshape\Huge Araba Fenyiwah Turkson} \\ \vspace{2pt}
+        \small
+        \faPhone* \texttt{+233.557.849.134} ~$|$~
+        \faEnvelope~\href{mailto:aturkson07@gmail.com}{\texttt{aturkson07@gmail.com}} ~$|$~
+        \faLinkedin~
+        \href{https://www.linkedin.com/in/araba-turkson001/}{\texttt{https://www.linkedin.com/in/araba-turkson001}}
+    \end{center}
+
+    % ---------- Education ----------
+    \section{Education}
+    \resumeSubHeadingListStart
+
+    \resumeSubheading
+    {BSc Computer Science and Engineering}{Jan 2023 -- Nov 2026}
+    {University of Mines and Technology (UMaT)}{Tarkwa, Ghana}
+
+    \resumeItemListStart
+    \resumeItem{Advisor}{Audrey Asante}
+    \resumeItem{Thesis}{Blockchain-enabled Staff Management System for the Ghana Education Service}
+    \resumeItem{Relevant Courses}{Operating Systems, Data Structures and Algorithms, Software Engineering, Human Computer Interaction, Networking Databases}
+    \resumeItemListEnd
+
+    \resumeSubheading
+    {Advanced Diploma in Occupational Safety and Health Management}{Jan 2023 -- Nov 2026}
+    {Imperial College of Mines and Safety}{Accra, Ghana}
+    \resumeItemListStart
+    \resumeItem{Relevant Courses}{Emergency response and evacuation plan, Work department Operations, Incidence reports and forms,  Behaviour-based safety}
+    \resumeItemListEnd
+
+    \resumeSubheading
+    {Wesley Girls High School}{Sept 2019 -- Sept 2022}
+    {General Science}{Cape Coast, Ghana}
+    \resumeItemListStart
+    \resumeItem{Relevant Courses}{Physics, Chemistry, Biology, Elective Mathematics}
+    \resumeItemListEnd
+
+     \resumeSubheading
+    {St. Anthony of Padua Catholic School}{Sept 2017 -- Jun 2019}
+
+    \resumeSubHeadingListEnd
+
+    % ---------- Certifications ----------
+    \section{Certifications}
+    \resumeSubHeadingListStart
+    \resumeProjectHeading{AWS Certified Cloud Practitioner}{}
+    \resumeProjectHeading{ALX AiCE AI Career Essentials}{}
+    \resumeSubHeadingListEnd
+
+    % ---------- Skills ----------
+    \section{Skills}
+    \resumeSubHeadingListStart
+    \resumeSubItem{Languages}{Python, SQL, JAVA, HTML, CSS}
+    \resumeSubItem{Tools}{MySQL, AWS, Canva}
+    \resumeSubItem{Platforms}{Linux, Web, Windows, Arduino, Raspberry, AWS}
+    \resumeSubItem{Soft Skills}{Leadership, Critical Thinking, Team Collaboration, Public Speaking, Time Management}
+    \resumeSubHeadingListEnd
+
+    % ---------- Awards ----------
+    \section{Honors and Awards}
+    \resumeSubHeadingListStart
+    \resumeAward{Best Course Representative}{2023}{Dept. of Computer Science and Engineering, UMaT}
+    \resumeAward{Best Basic Education Certificate Examination (BECE) Student}{2019}{ St. Anthony of Padua, Effia-Kwesimintsim Municipal Assembly (EKMA)}
+    \resumeSubHeadingListEnd
+
+
+    % ---------- Projects ----------
+    \section{Projects}
+    \resumeSubHeadingListStart
+
+
+    \resumeProjectHeading
+    {Finance Tracker}{Web Development, UI/UX}
+    \resumeItemListStart
+    \resumeItem{Personal Finance Management System}{Designed and developed a finance tracking application to monitor income, expenses, and savings in a structured and user-friendly interface.}
+    \resumeItem{Data Visualization \& Insights}{Implemented dashboards and visual summaries to provide users with clear insights into spending patterns and financial behavior.}
+    \resumeItem{User Experience Optimization}{Built an intuitive UI to simplify financial tracking, improving usability and user engagement.}
+    \resumeItemListEnd
+
+    \resumeSubHeadingListEnd
+
+    %-----------EXPERIENCE-----------
+    \section{Work Experience}
+    \resumeSubHeadingListStart
+
+    \resumeSubheading
+    {IoT \& Robotics Intern}{Oct 2026 -- Present}
+    {Smart Systems Center}{Tarkwa, Ghana}
+    \resumeItemListStart
+    \resumeItem{Robotics Systems Engineering}{Built and deployed robotic platforms, including Raspberry Pi-based crawlers and manipulator arms for autonomous and semi-autonomous operations.}
+    \resumeItem{Embedded Systems Development}{Developed and tested embedded solutions using microcontrollers and sensor modules for real-time control and monitoring.}
+    \resumeItem{Rapid Prototyping \& 3D Fabrication}{Designed and fabricated custom components using 3D printing, accelerating hardware iteration cycles.}
+    \resumeItem{System Testing \& Optimization}{Conducted debugging, performance tuning, and reliability testing to ensure robust system performance.}
+    \resumeItem{Technical Collaboration}{Collaborated with multidisciplinary teams on system design, integration, and problem-solving across hardware and software layers.
+    }
+    \resumeItemListEnd
+
+    \resumeSubheading
+    {Cloud Engineering Intern (Agri-IoT)}{Oct 2024 -- Present}
+    {Smart Water and Affordable Monitoring System (SWAMPS)}{Tarkwa, Ghana}
+    \resumeItemListStart
+    \resumeItem{Cloud-Based Monitoring Platform}{Engineered a cloud-enabled water monitoring system supporting real-time data collection and visualization, improving accessibility and decision-making.}
+    \resumeItem{IoT-Cloud Integration}{Integrated sensor data streams with cloud infrastructure, enabling scalable storage, processing, and analytics.}
+    \resumeItem{Data Pipeline Optimization}{Streamlined data ingestion and processing workflows, enabling near real-time insights and improved system responsiveness.}
+    \resumeItem{Cross-functional Collaboration}{Worked with IoT and hardware teams to ensure seamless communication between embedded devices and cloud services.}
+    \resumeItemListEnd
+
+
+    \resumeSubheading
+    {Banking Operations Intern}{Oct 2023 -- Dec 2023}
+    {Ahantaman Rural Bank Plc.}{Agona Nkwanta, Ghana}
+    \resumeItemListStart
+    \resumeItem{Operational Support}{Executed core banking operations, including transaction processing, account management, and records handling.}
+    \resumeItem{Customer Experience}{Provided frontline support by resolving customer inquiries and facilitating service requests.}
+    \resumeItem{Financial Systems \& Compliance}{Gained hands-on experience with banking systems, regulatory procedures, and secure financial data handling.}
+    \resumeItemListEnd
+
+    \resumeSubHeadingListEnd
+    % -----------Multiple Positions Heading-----------
+    %    \resumeSubSubheading
+    %     {Software Engineer I}{Oct 2014 - Sep 2016}
+    %     \resumeItemListStart
+    %        \resumeItem{Apache Beam}
+    %          {Apache Beam is a unified model for defining both batch and streaming data-parallel processing pipelines}
+    %     \resumeItemListEnd
+    %    \resumeSubHeadingListEnd
+    %-------------------------------------------
+
+    %-----------LEADERSHIP-----------
+    \section{Leadership}
+    \resumeSubHeadingListStart
+
+    \resumeSubheading
+    {President, Women in Tech Initiative}{Jan 2026 -- Present}
+    {Association of Computer Science and Engineering Students Senate (ACSES), UMaT}{Tarkwa, Ghana}
+    \resumeItemListStart
+    \resumeItem{Personal Finance Management System}
+    {Designed and developed a finance tracking application to monitor income, expenses, and savings in a structured and user-friendly interface.}
+    \resumeItem{Data Visualization \& Insights}
+    {Implemented dashboards and visual summaries to provide users with clear insights into spending patterns and financial behavior.}
+    \resumeItem{User Experience Optimization}
+    {Built an intuitive UI to simplify financial tracking, improving usability and user engagement.}
+    \resumeItemListEnd
+
+    \resumeSubheading
+    {Class Representative}{Jan 2023 -- Present}
+    {Association of Computer Science and Engineering Students Senate (ACSES), UMaT}{Tarkwa, Ghana}
+    \resumeItemListStart
+    \resumeItem{Student Representation}{Represented 143 students from my class in the Association's legislative Senate, advocating for their welfare, interests, and concerns at official meetings.}
+    \resumeItem{Legislative Participation}{Participated in deliberations and voted on semester budgets, activity programs, and key Association policies in accordance with the ACSES-UMaT Constitution.}
+    \resumeItem{Stakeholder Collaboration}{Collaborated with the Executive Committee and fellow Senators on governance decisions, ensuring student interests were reflected in all major resolutions.}
+    \resumeItem{Communication \& Reporting}{Communicated Senate decisions, updates, and policy changes back to classmates promptly, maintaining transparency and informed engagement.}
+    \resumeItemListEnd
+
+    \resumeSubheading
+    {Secretary, Ladies Welfare Committee}{Jan 2024 -- Aug 2024}
+    {International Movement of Catholic Students, UMaT}{Tarkwa, Ghana}
+    \resumeItemListStart
+    \resumeItem{Member Welfare \& Support}
+    {Monitored and attended to the physical, emotional, and spiritual well-being of Pax Ladies members, ensuring timely support was provided during times of need such as illness, bereavement, and personal challenges.}
+    \resumeItem{Visitation \& Outreach}
+    {Organised and coordinated visitation programs to members who were sick, grieving, or going through difficult times, fostering a strong sense of sisterhood and community.}
+    \resumeItem{Financial Assistance Coordination}
+    {Facilitated welfare packages and financial support for members in need, managing contributions and disbursements in a transparent and accountable manner.}
+
+    \resumeItem{Event \& Program Planning}
+    {Assisted in planning and executing welfare-related programs and activities aimed at strengthening fellowship and member engagement within the group.}
+    \resumeItem{Communication \& Advocacy}
+    {Served as a voice for members' welfare needs, communicating concerns to leadership and ensuring members were informed of available support and resources.}
+    \resumeItemListEnd
+
+    \resumeSubHeadingListEnd
+
+
+    %
+    %-----------VOLUNTEER-----------
+
+
+    \section{Volunteering Experience}
+    \resumeSubHeadingListStart
+
+    \resumeSubheading
+    {STEM Instructor}{Mar 2026}
+    {STEM Spark Programme, UMaT}{Tarkwa, Ghana}
+
+    \resumeItemListStart
+    \resumeItem{STEM Education \& Training}
+    {Facilitated hands-on learning sessions for 50+ students, teaching digital design and poster creation as part of a STEM outreach initiative.}
+    \resumeItem{Student Engagement}
+    {Simplified complex concepts into practical activities, enhancing student creativity and interest in STEM fields.}
+    \resumeItemListEnd
+
+    \resumeSubheading
+    {World Engineering Day Outreach Volunteer}{Mar 2026}
+    {UNESCO, United Nations, Educational, Scientific and Cultural Organization}{Tarkwa, Ghana}
+
+    \resumeItemListStart
+    \resumeItem{STEM Advocacy}
+    {Visited 4 schools to promote engineering education and inspire students to pursue careers in science, technology, engineering, and mathematics.}
+    \resumeItem{Project Demonstrations}
+    {Presented innovative projects, including a clap switch and smart dustbin, demonstrating real-world engineering applications.}
+    \resumeItemListEnd
+
+    \resumeSubheading
+    {Event Moderator}{Aug 2025}
+    {Institute of Electrical and Electronics Engineers (IEEE), Ghana}{Virtual, Ghana}
+    \resumeItemListStart
+    \resumeItem{Event Moderation}
+    {Moderated a session on ``Healthy Dieting with Studies,'' facilitating discussions and engaging participants on balancing health and academics.}
+    \resumeItemListEnd
+
+    \resumeSubheading
+    {Community Volunteer}{Nov 2023}
+    {Livelihood Empowerment Against Poverty Programme (LEAP)}{Dixcove, Ghana}
+
+    \resumeItemListStart
+    \resumeItem{Community Outreach}
+    {Participated in the distribution of financial support to vulnerable individuals in deprived communities, supporting social welfare initiatives.}
+    \resumeItemListEnd
+
+    \resumeSubHeadingListEnd
+
+\end{document}
