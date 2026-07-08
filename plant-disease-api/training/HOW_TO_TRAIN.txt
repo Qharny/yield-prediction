@@ -1,0 +1,72 @@
+PLANT DISEASE DETECTION MODEL - TRAINING STEPS
+================================================
+
+Run all commands from the "training" folder:
+    cd "G:\yield prediction\plant-disease-api\training"
+
+STEP 1 - Install dependencies
+------------------------------
+    pip install -r requirements.txt
+
+STEP 2 - Get your dataset ready
+--------------------------------
+Your images need to be organized into a "data" folder, with one
+subfolder per disease class (15 classes total), e.g.:
+
+    data/
+    ├── Bacterial spot (Pepper, bell)/
+    ├── Bacterial spot (Tomato)/
+    ├── Cercospora leaf spot Gray leaf spot (Corn (maize))/
+    ├── Common rust (Corn (maize))/
+    ├── Early blight (Tomato)/
+    ├── Late blight (Tomato)/
+    ├── Leaf Mold (Tomato)/
+    ├── Northern Leaf Blight (Corn (maize))/
+    ├── Septoria leaf spot (Tomato)/
+    ├── Target Spot (Tomato)/
+    ├── Tomato Yellow Leaf Curl Virus (Tomato)/
+    ├── Tomato mosaic virus (Tomato)/
+    ├── healthy (Corn (maize))/
+    ├── healthy (Pepper, bell)/
+    └── healthy (Tomato)/
+
+Option A - Check/scaffold the folders (use your real dataset, e.g. PlantVillage):
+    python prepare_dataset.py --data_dir ./data
+
+Option B - Just testing the pipeline with fake images (no real dataset needed):
+    python prepare_dataset.py --mock
+
+STEP 3 - Train the model
+--------------------------
+Run this command to start training:
+
+    python train.py --data_dir ./data --epochs 15 --batch_size 32 --lr 0.0001
+
+Optional flags you can adjust:
+    --epochs            number of epochs for the initial training phase (default 15)
+    --batch_size         images per batch (default 32)
+    --lr                 initial learning rate (default 0.0001)
+    --fine_tune_epochs   epochs for fine-tuning VGG19 layers after (default 5, use 0 to skip)
+    --fine_tune_layers   number of top VGG19 layers to unfreeze (default 4)
+    --model_save_path    where to save the trained model (default ../model/final_plant_disease_model.keras)
+
+The best model (highest validation accuracy) is saved automatically to:
+    ../model/final_plant_disease_model.keras
+
+A training_history.png chart (accuracy/loss curves) is also saved.
+
+STEP 4 - Evaluate the trained model
+-------------------------------------
+    python evaluate.py --data_dir ./data --model_path ../model/final_plant_disease_model.keras
+
+This produces:
+    evaluation_report.txt   (accuracy, precision, recall, F1 per class)
+    confusion_matrix.png    (visual confusion matrix)
+
+NOTES
+-----
+- If you only ran the mock dataset (Step 2, Option B), training will complete
+  but the model will NOT be accurate - it's only useful to confirm the
+  pipeline runs without errors.
+- For a real model, download the PlantVillage dataset (or similar) and sort
+  images into the 15 class folders listed above before running Step 3.
