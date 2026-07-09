@@ -3,7 +3,7 @@ import tensorflow as tf
 
 from tensorflow.keras.applications.vgg19 import preprocess_input
 
-from ml_model import model
+from ml_model import model, embedding_model, ood_enabled, ood_centroids, ood_threshold
 from class_names import class_names
 
 
@@ -16,6 +16,21 @@ def predict_image(image):
     image = np.expand_dims(image, axis=0)
 
     image = preprocess_input(image)
+
+    if ood_enabled:
+        embedding = embedding_model.predict(image, verbose=0)[0]
+        embedding = embedding / max(np.linalg.norm(embedding), 1e-8)
+        similarities = ood_centroids @ embedding
+        max_similarity = float(np.max(similarities))
+
+        if max_similarity < ood_threshold:
+            return {
+                "prediction": "NOT_A_PLANT_LEAF",
+                "status": "rejected",
+                "confidence": max_similarity,
+                "message": "This image doesn't look like a plant leaf. Please upload a clear photo of a single leaf.",
+                "top_predictions": []
+            }
 
     preds = model.predict(image, verbose=0)[0]
 
