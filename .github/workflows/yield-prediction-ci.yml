@@ -1,0 +1,76 @@
+name: Yield Prediction CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "app.py"
+      - "model/**"
+      - "dataset/**"
+      - "templates/**"
+      - "requirements.txt"
+      - "Procfile"
+      - ".github/workflows/yield-prediction-ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "app.py"
+      - "model/**"
+      - "dataset/**"
+      - "templates/**"
+      - "requirements.txt"
+      - "Procfile"
+      - ".github/workflows/yield-prediction-ci.yml"
+
+jobs:
+  build-and-smoke-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Compile check
+        run: |
+          python -m py_compile app.py model/predict.py model/train_model.py dataset/generate_ghana_dataset.py
+
+      - name: Smoke test API
+        run: |
+          python - <<'PY'
+          from app import app
+
+          client = app.test_client()
+
+          health = client.get("/api/health")
+          assert health.status_code == 200, health.get_data(as_text=True)
+          assert health.get_json()["status"] == "ok"
+
+          payload = {
+              "crop": "Maize",
+              "region": "Ashanti",
+              "farm_size_acres": 2.5,
+              "crop_variety": "Hybrid OPV",
+              "season": "Major",
+          }
+          resp = client.post("/api/predict", json=payload)
+          body = resp.get_json()
+          assert resp.status_code == 200, body
+          assert body["success"] is True, body
+          assert "predicted_yield_per_acre" in body["data"], body
+
+          print("Smoke test passed:", body["data"])
+          PY
